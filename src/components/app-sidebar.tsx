@@ -25,7 +25,7 @@ import {
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { menuItems } from "@/data/sidebar-data";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 interface MenuItem {
   title: string;

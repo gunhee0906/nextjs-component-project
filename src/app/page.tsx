@@ -1,11 +1,12 @@
-import { CustomSpinner, Spinner } from "@/components/ui/spinner";
+// import { CustomSpinner } from "@/components/ui/spinner";
+import HomePageView from "@/components/views/home/homePageView";
 
 export default function Home() {
   return (
     <>
       <div className="relative">
-        home
-        <CustomSpinner show={false} />
+        <HomePageView />
+        {/* <CustomSpinner show={true} /> */}
       </div>
     </>
   );

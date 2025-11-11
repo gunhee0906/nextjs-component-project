@@ -8,8 +8,6 @@
   }
 }
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -82,7 +80,10 @@
   }
 }
 
-
+/* // FullPage.js 가 알아서 높이를 설정하지만, Next js의 hydration 타이밍 문제로 한 프레임이 깨짐 */
+.section {
+  height: 100vh !important;
+}
 
 @layer base {
   * {
