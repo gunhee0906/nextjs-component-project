@@ -3,11 +3,8 @@
 
 import { useEffect } from "react";
 import FullPageScroll from "@/components/ui/fullpageScroll";
-import { useFetchAuthQuery } from "@/store/api/auth/authSlice";
 
 export default function HomePageView() {
-  const { data: user } = useFetchAuthQuery();
-
   // 이 페이지에서만 overflow hidden 적용
   useEffect(() => {
     const main = document.querySelector("main");
@@ -24,14 +21,17 @@ export default function HomePageView() {
 
   return (
     <FullPageScroll>
+      {/* Section  1 */}
       <Section bg="bg-blue-500">
         <h1 className="text-6xl font-bold text-white"></h1>
       </Section>
 
+      {/* Section 2 */}
       <Section bg="bg-green-500">
         <h1 className="text-6xl font-bold text-white"></h1>
       </Section>
 
+      {/* Section 3 */}
       <Section bg="bg-purple-500">
         <h1 className="text-6xl font-bold text-white"></h1>
       </Section>

@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -15,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { Checkbox } from "../ui/checkbox";
 import { useFetchLoginMutation } from "@/store/api/auth/authSlice";
-import { Loader2, User } from "lucide-react";
+import { Spinner } from "../ui/spinner";
 
 interface FormDataType {
   email: string;
@@ -108,55 +107,53 @@ export function LoginModal({ children }: any) {
             <DialogTitle className="text-center">로그인</DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
-              <p className="text-sm text-muted-foreground">처리 중입니다...</p>
-            </div>
-          ) : (
-            <form>
-              <div className="grid gap-4">
-                <div className="grid gap-3">
-                  <Label htmlFor="name-1">사용자 Email</Label>
-                  <Input
-                    name="email"
-                    value={formData.email}
-                    onChange={(e) => handleChange(e)}
-                    onKeyDown={handleEnter}
-                  />
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="username-1">사용자 Password</Label>
-                  <Input
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) => handleChange(e)}
-                    onKeyDown={handleEnter}
-                  />
-                </div>
-                <div className="flex items-center gap-3">
-                  <Checkbox
-                    name="account"
-                    checked={account}
-                    onCheckedChange={handleAccount}
-                  />
-                  <Label htmlFor="terms">계정정보 기억하기</Label>
-                </div>
-                <Label className="text-center text-red-500">
-                  {error?.login}
-                </Label>
+
+          <form>
+            <div className="grid gap-4">
+              <div className="grid gap-3">
+                <Label htmlFor="name-1">사용자 Email</Label>
+                <Input
+                  disabled={isLoading}
+                  name="email"
+                  value={formData.email}
+                  onChange={(e) => handleChange(e)}
+                  onKeyDown={handleEnter}
+                />
               </div>
-              <DialogFooter className="mt-5">
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <Button type="button" onClick={handleSubmit}>
-                  Save changes
-                </Button>
-              </DialogFooter>
-            </form>
-          )}
+              <div className="grid gap-3">
+                <Label htmlFor="username-1">사용자 Password</Label>
+                <Input
+                  disabled={isLoading}
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => handleChange(e)}
+                  onKeyDown={handleEnter}
+                />
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  disabled={isLoading}
+                  name="account"
+                  checked={account}
+                  onCheckedChange={handleAccount}
+                />
+                <Label htmlFor="terms">계정정보 기억하기</Label>
+              </div>
+              <Label className="text-center text-red-500">{error?.login}</Label>
+            </div>
+            <DialogFooter className="mt-5">
+              <Button
+                disabled={isLoading}
+                className="w-full"
+                type="button"
+                onClick={handleSubmit}
+              >
+                {isLoading && <Spinner />}
+                Login
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </>

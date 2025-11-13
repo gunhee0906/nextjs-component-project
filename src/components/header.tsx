@@ -1,11 +1,12 @@
 "use client";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Bell, Search, User } from "lucide-react";
+import { Search, User } from "lucide-react";
 import { LoginModal } from "./modal/loginModal";
 import { JWTPayload } from "@/lib/auth";
 import { DarkModeButton } from "./ui/darkmode";
 import { useFetchAuthQuery } from "@/store/api/auth/authSlice";
+import NotificationDrawer from "./modal/notiModal";
 interface Props {
   auth: JWTPayload | null;
   // email , token
@@ -13,13 +14,12 @@ interface Props {
 export default function Header({ auth }: Props) {
   // auth : email , token 값 존재
   console.log(auth);
-
   const { data: user } = useFetchAuthQuery();
 
   return (
     <>
-      <header>
-        <div className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-6">
+      <header className="flex-shrink-0">
+        <div className="z-10 flex h-14 items-center gap-4 border-b bg-background px-6">
           <SidebarTrigger />
           <div className="flex-1">
             <div className="relative max-w-md">
@@ -34,9 +34,8 @@ export default function Header({ auth }: Props) {
           <div className="flex items-center gap-2">
             <DarkModeButton />
 
-            <Button variant="outline" size="icon">
-              <Bell className="h-4 w-4" />
-            </Button>
+            <NotificationDrawer />
+
             {user?.email ? (
               <Button variant="outline" size="icon">
                 <User className="h-4 w-4" />
