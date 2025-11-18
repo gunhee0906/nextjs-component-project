@@ -7,6 +7,8 @@ import { JWTPayload } from "@/lib/auth";
 import { DarkModeButton } from "./ui/darkmode";
 import { useFetchAuthQuery } from "@/store/api/auth/authSlice";
 import NotificationDrawer from "./modal/notiModal";
+import { useAppSelector } from "@/store/hooks";
+import UserModal from "./modal/userModal";
 interface Props {
   auth: JWTPayload | null;
   // email , token
@@ -14,7 +16,11 @@ interface Props {
 export default function Header({ auth }: Props) {
   // auth : email , token 값 존재
   console.log(auth);
-  const { data: user } = useFetchAuthQuery();
+
+  useFetchAuthQuery();
+
+  // Store 에 저장되어 있는 User Data ( email & name )
+  const user = useAppSelector((state) => state.user);
 
   return (
     <>
@@ -37,9 +43,11 @@ export default function Header({ auth }: Props) {
             <NotificationDrawer />
 
             {user?.email ? (
-              <Button variant="outline" size="icon">
-                <User className="h-4 w-4" />
-              </Button>
+              <UserModal>
+                <Button variant="outline" size="icon">
+                  <User className="h-4 w-4" />
+                </Button>
+              </UserModal>
             ) : (
               <LoginModal>
                 <Button variant={"outline"} size={"icon"}>

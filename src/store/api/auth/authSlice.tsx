@@ -60,7 +60,20 @@ export const AuthApiSlice = createApi({
         body,
       }),
     }),
+
+    // 유저 로그아웃
+    fetchLogout: builder.mutation({
+      query: () => ({
+        method: "post",
+        url: "/logout",
+      }),
+    }),
   }),
 });
 
-export const { useFetchAuthQuery, useFetchLoginMutation } = AuthApiSlice;
+export const {
+  useFetchAuthQuery,
+  useFetchLoginMutation,
+  useLazyFetchAuthQuery,
+  useFetchLogoutMutation,
+} = AuthApiSlice;

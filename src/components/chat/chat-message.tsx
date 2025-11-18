@@ -1,0 +1,108 @@
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { User, Bot } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import CodeBlock from "./item/code-block";
+import TableMessage from "./item/table";
+
+interface ChatMessageProps {
+  message: MessageType;
+  copiedTableId: number | null;
+  onCopyTable: (
+    tableData: { headers: string[]; rows: string[][] },
+    messageId: number
+  ) => void;
+}
+
+export default function ChatMessage({
+  message,
+  copiedTableId,
+  onCopyTable,
+}: ChatMessageProps) {
+  return (
+    <div
+      className={`py-8 px-4 mb-2 rounded-lg transition-all duration-300 ease-in-out ${
+        message.role === "assistant" ? "bg-muted/50" : ""
+      }`}
+    >
+      <div className="max-w-3xl mx-auto flex gap-4">
+        <Avatar className="h-8 w-8 flex-shrink-0">
+          {message.role === "user" ? (
+            <AvatarFallback>
+              <User className="h-4 w-4" />
+            </AvatarFallback>
+          ) : (
+            <AvatarFallback className="bg-primary">
+              <Bot className="h-4 w-4 text-primary-foreground" />
+            </AvatarFallback>
+          )}
+        </Avatar>
+
+        <div className="flex-1 space-y-2">
+          <p className="font-semibold text-sm">
+            {message.role === "user" ? "You" : "AI"}
+          </p>
+          <div className="prose prose-sm max-w-none dark:prose-invert">
+            {message.role === "user" ? (
+              <div className="whitespace-pre-wrap">{message.content}</div>
+            ) : (
+              <div className="animate-in fade-in duration-200 leading-8">
+                {message.type === "table" && message.tableData ? (
+                  <TableMessage
+                    tableData={message.tableData}
+                    isCopied={copiedTableId === message.id}
+                    onCopy={() => onCopyTable(message.tableData!, message.id)}
+                  />
+                ) : message.type === "table" && message.content ? (
+                  <div className="whitespace-pre-wrap font-mono text-sm bg-muted p-4 rounded">
+                    {message.content}
+                  </div>
+                ) : (
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      code({ inline, className, children, ...props }) {
+                        const match = /language-(\w+)/.exec(className || "");
+                        const codeString = String(children).replace(/\n$/, "");
+
+                        return !inline && match ? (
+                          <CodeBlock language={match[1]}>
+                            {codeString}
+                          </CodeBlock>
+                        ) : (
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        );
+                      },
+                      img({ ...props }) {
+                        return (
+                          <img
+                            {...props}
+                            className="rounded-lg max-w-full h-auto transition-all duration-300 ease-in-out mt-4"
+                            loading="lazy"
+                          />
+                        );
+                      },
+                    }}
+                  >
+                    {message.content}
+                  </ReactMarkdown>
+                )}
+                {message.isImageLoading && (
+                  <div className="flex flex-col space-y-3 my-4 animate-in fade-in duration-300">
+                    <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                  </div>
+                )}
+              </div>
+            )}
+            {message.isStreaming && (
+              <span className="inline-block w-2 h-4 ml-1 bg-primary animate-pulse" />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

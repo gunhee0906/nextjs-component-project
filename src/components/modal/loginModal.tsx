@@ -13,9 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { Checkbox } from "../ui/checkbox";
-import { useFetchLoginMutation } from "@/store/api/auth/authSlice";
+import {
+  useFetchLoginMutation,
+  useLazyFetchAuthQuery,
+} from "@/store/api/auth/authSlice";
 import { Spinner } from "../ui/spinner";
-
+import { toast } from "sonner";
 interface FormDataType {
   email: string;
   password: string;
@@ -23,6 +26,7 @@ interface FormDataType {
 
 export function LoginModal({ children }: any) {
   const [fetchLogin] = useFetchLoginMutation();
+  const [trigger] = useLazyFetchAuthQuery();
 
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -74,8 +78,11 @@ export function LoginModal({ children }: any) {
     try {
       const response = await fetchLogin(body);
       if (response.data.result) {
+        // Local Storage 에 저장
         accountRemeber("123");
         setOpen(false);
+        trigger();
+        toast.success("로그인 되었습니다.");
       } else {
         setError((prev) => ({ ...prev, login: response.data.message }));
       }

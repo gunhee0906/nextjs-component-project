@@ -26,6 +26,13 @@ export const userSlice = createSlice({
           state.email = action.payload.email;
           state.name = action.payload.name;
         }
+      )
+      .addMatcher(
+        AuthApiSlice.endpoints.fetchLogout.matchFulfilled,
+        (state) => {
+          state.email = "";
+          state.name = "";
+        }
       );
   },
 });

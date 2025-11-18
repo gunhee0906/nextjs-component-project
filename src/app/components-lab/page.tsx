@@ -1,4 +1,4 @@
-import AiChatInterface from "@/components/chat/aiChatInterface";
+import AiChatInterface from "@/components/chat/interface";
 
 export default function ComponentsLabPage() {
   return (
