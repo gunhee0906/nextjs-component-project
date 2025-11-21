@@ -62,11 +62,11 @@ export default function ChatMessage({
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={{
-                      code({ inline, className, children, ...props }) {
+                      code({ className, children, ...props }) {
                         const match = /language-(\w+)/.exec(className || "");
                         const codeString = String(children).replace(/\n$/, "");
 
-                        return !inline && match ? (
+                        return match ? (
                           <CodeBlock language={match[1]}>
                             {codeString}
                           </CodeBlock>
@@ -85,6 +85,31 @@ export default function ChatMessage({
                           />
                         );
                       },
+                      ul: ({ ...props }) => (
+                        <ul className="list-disc pl-6" {...props} />
+                      ),
+                      ol: ({ ...props }) => (
+                        <ol className="list-decimal pl-6" {...props} />
+                      ),
+                      h1: ({ ...props }) => (
+                        <h1 className="text-3xl font-bold my-4" {...props} />
+                      ),
+                      h2: ({ ...props }) => (
+                        <h2
+                          className="text-2xl font-semibold my-3"
+                          {...props}
+                        />
+                      ),
+                      h3: ({ ...props }) => (
+                        <h3 className="text-xl font-semibold my-2" {...props} />
+                      ),
+                      input: ({ ...props }) => (
+                        <input
+                          {...props}
+                          type="checkbox"
+                          className="mr-2 h-4 w-4 accent-blue-500"
+                        />
+                      ),
                     }}
                   >
                     {message.content}

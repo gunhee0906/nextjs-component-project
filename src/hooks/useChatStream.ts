@@ -1,21 +1,15 @@
 import { parseMarkdownTable } from "@/utils/chat/tableUtils";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export const useChatStream = () => {
-  const [messages, setMessages] = useState<MessageType[]>([
-    {
-      id: 1,
-      type: "text",
-      content: "안녕하세요! 무엇을 도와드릴까요?",
-      role: "assistant",
-      timestamp: new Date(),
-    },
-  ]);
-
+  const [messages, setMessages] = useState<MessageType[]>([]);
+  const params = useParams();
+  console.log(params?.conversation);
   const streamResponse = async (messageId: number, inputValue: string) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/ai-chat?msg=${inputValue}`,
+        `http://localhost:4000/api/ai-chat/message?msg=${inputValue}&conversationId=${params.conversation}`,
         {
           method: "GET",
           headers: {

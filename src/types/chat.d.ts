@@ -14,9 +14,18 @@ interface MessageType {
 }
 
 // 채팅 히스토리 타입 (예시)
-interface ChatHistory {
+interface ChatHistory2 {
   id: string;
   title: string;
   lastMessage: string;
   timestamp: Date;
+}
+
+interface ChatHistory {
+  id: string;
+  title: string;
+  created_at: Date;
+  deleted_at: Date;
+  updated_at: Date;
+  user_id: string;
 }

@@ -1,3 +1,4 @@
+"use client";
 import { CircleStop, Send } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
@@ -15,7 +16,6 @@ export default function ChatInput({
   isLoading,
 }: Props) {
   const focusRef = useRef<HTMLTextAreaElement | null>(null);
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
