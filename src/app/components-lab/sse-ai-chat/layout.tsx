@@ -8,6 +8,7 @@ export default function SSEAiChatLayout({
   return (
     <>
       <AiChatInterface>{children}</AiChatInterface>
+      {/* <ChatTest>{children}</ChatTest> */}
     </>
   );
 }

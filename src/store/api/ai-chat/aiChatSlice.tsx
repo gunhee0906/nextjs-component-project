@@ -26,10 +26,19 @@ export const AiChatApiSlice = createApi({
     }),
 
     // 채팅 내용 가져오기
-    fetchAiChatContent: builder.query({
+    fetchAiChatContent: builder.query<any, any>({
       query: (params: { conversation: any }) => ({
         method: "get",
         url: `/get-ai-chat-content?conversation=${params.conversation}`,
+      }),
+    }),
+
+    // 채팅 세션 삭제
+    fetchDeleteAiChat: builder.mutation({
+      query: (body: { conversation: string }) => ({
+        method: "post",
+        url: "/del-ai-chat-session",
+        body,
       }),
     }),
   }),
@@ -38,5 +47,8 @@ export const AiChatApiSlice = createApi({
 export const {
   useFetchNewAiChatMutation,
   useFetchAiChatHistoryListQuery,
+  useLazyFetchAiChatHistoryListQuery,
   useFetchAiChatContentQuery,
+  useLazyFetchAiChatContentQuery,
+  useFetchDeleteAiChatMutation,
 } = AiChatApiSlice;

@@ -11,11 +11,11 @@ import { useAppSelector } from "@/store/hooks";
 import UserModal from "./modal/userModal";
 interface Props {
   auth: JWTPayload | null;
+  sidebar: string | undefined;
   // email , token
 }
-export default function Header({ auth }: Props) {
+export default function Header({ auth, sidebar }: Props) {
   // auth : email , token 값 존재
-  console.log(auth);
 
   useFetchAuthQuery();
 

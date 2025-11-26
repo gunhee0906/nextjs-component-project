@@ -17,10 +17,17 @@ interface ProjectItem {
 const projects: ProjectItem[] = [
   {
     id: "1",
-    title: "SSE AI Chat",
-    description: "React와 TypeScript를 활용한 웹 애플리케이션",
+    title: "SSE AI Chat [Dumie Data]",
+    description: "SSE 통신을 활용한 Dumie Data AI 채팅",
     imageUrl: "/images/sse-ai-chat.png",
     url: "/components-lab/sse-ai-chat",
+  },
+  {
+    id: "2",
+    title: "SSE AI Chat [Gemini AI API]",
+    description: "SSE 통신을 활용한 Gemini AI 연동",
+    imageUrl: "/images/sse-ai-chat.png",
+    url: "/components-lab/ai-chat",
   },
 ];
 

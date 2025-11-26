@@ -1,13 +1,12 @@
-import { useLazyFetchAiChatHistoryListQuery } from "@/store/api/ai-chat/aiChatSlice";
 import { parseMarkdownTable } from "@/utils/chat/tableUtils";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
-export const useChatStream = () => {
-  const [trigger] = useLazyFetchAiChatHistoryListQuery();
+export const useAIStream = () => {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const params = useParams();
   console.log(params?.conversation);
+
   const streamResponse = async (
     messageId: number,
     inputValue: string,
@@ -15,12 +14,17 @@ export const useChatStream = () => {
   ) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/ai-chat/message?msg=${inputValue}&conversationId=${currentConversation || params.conversation}`,
+        `http://localhost:4000/api/ai-chat/ge-message`,
         {
-          method: "GET",
+          method: "POST",
           headers: {
+            "Content-Type": "application/json",
             Accept: "text/event-stream",
           },
+          body: JSON.stringify({
+            message: inputValue,
+            conversation: currentConversation,
+          }),
         }
       );
 
@@ -73,71 +77,39 @@ export const useChatStream = () => {
                     msg.id === messageId ? { ...msg, isStreaming: false } : msg
                   )
                 );
+                break;
               }
-              break;
             }
 
             try {
               const chunk = JSON.parse(data);
 
-              if (chunk.type === "image") {
-                setMessages((prev) =>
-                  prev.map((msg) =>
-                    msg.id === messageId
-                      ? { ...msg, isImageLoading: true }
-                      : msg
-                  )
+              // Gemini 응답 형식: { text: "안녕하세요" }
+              const text = chunk.text || "";
+
+              if (!text) continue;
+
+              // 일반 텍스트 스트리밍 (단어별로 출력)
+              const words = text.split(/(\s+)/);
+              for (const word of words) {
+                if (word === "") continue;
+
+                const baseDelay = 40;
+                const randomDelay = Math.random() * 30;
+                await new Promise((resolve) =>
+                  setTimeout(resolve, baseDelay + randomDelay)
                 );
 
-                await new Promise((resolve) => setTimeout(resolve, 3000));
-
-                setMessages((prev) =>
-                  prev.map((msg) =>
-                    msg.id === messageId
-                      ? {
-                          ...msg,
-                          content: msg.content + chunk.content,
-                          isImageLoading: false,
-                        }
-                      : msg
-                  )
-                );
-              } else if (chunk.type === "table") {
-                tableBuffer += chunk.content;
                 setMessages((prev) =>
                   prev.map((msg) =>
                     msg.id === messageId
                       ? {
                           ...msg,
-                          type: "table",
-                          content: tableBuffer,
+                          content: msg.content + word,
                         }
                       : msg
                   )
                 );
-                await new Promise((resolve) => setTimeout(resolve, 50));
-              } else {
-                const words = chunk.content.split(/(\s+)/);
-                for (const word of words) {
-                  if (word === "") continue;
-
-                  const baseDelay = 40;
-                  const randomDelay = Math.random() * 30;
-                  await new Promise((resolve) =>
-                    setTimeout(resolve, baseDelay + randomDelay)
-                  );
-
-                  setMessages((prev) =>
-                    prev.map((msg) =>
-                      msg.id === messageId
-                        ? {
-                            ...msg,
-                            content: msg.content + word,
-                          }
-                        : msg
-                    )
-                  );
-                }
               }
             } catch (e) {
               console.error("Error parsing SSE data:", e);
@@ -145,7 +117,6 @@ export const useChatStream = () => {
           }
         }
       }
-      trigger();
     } catch (error) {
       console.error("Error streaming response:", error);
       setMessages((prev) =>

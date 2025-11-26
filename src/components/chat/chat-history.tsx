@@ -14,16 +14,23 @@ import { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { useAppSelector } from "@/store/hooks";
 import { Label } from "../ui/label";
-import { useFetchAiChatHistoryListQuery } from "@/store/api/ai-chat/aiChatSlice";
-import { useRouter } from "next/navigation";
+import {
+  useFetchAiChatHistoryListQuery,
+  useFetchDeleteAiChatMutation,
+} from "@/store/api/ai-chat/aiChatSlice";
+import { useParams, useRouter } from "next/navigation";
 
 export default function ChatHistory({
   children,
+  onClear,
 }: {
   children: React.ReactNode;
+  onClear: Function;
 }) {
   const router = useRouter();
-  const { data: history } = useFetchAiChatHistoryListQuery();
+  const params = useParams();
+  const { data: history, refetch } = useFetchAiChatHistoryListQuery();
+  const [deleteSession] = useFetchDeleteAiChatMutation();
   const [open, setOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const user = useAppSelector((state) => state.user);
@@ -36,7 +43,17 @@ export default function ChatHistory({
 
   const handleNewChatSession = async () => {
     if (user.email) {
+      onClear();
+      setOpen(false);
     } else {
+    }
+  };
+
+  const handleDeleteSession = async (chatId: string) => {
+    const response = await deleteSession({ conversation: chatId });
+    if (response.data.result) {
+      refetch();
+      onClear();
     }
   };
 
@@ -89,7 +106,7 @@ export default function ChatHistory({
                   {chatHistory.map((chat) => (
                     <div
                       key={chat.id}
-                      className="group relative rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors"
+                      className={`group relative rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors ${chat?.id === params?.conversation ? "bg-muted" : ""}`}
                       onClick={() => {
                         // 채팅 히스토리 클릭 시 처리
                         router.push(`/components-lab/sse-ai-chat/${chat.id}`);
@@ -114,10 +131,8 @@ export default function ChatHistory({
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            // 삭제 처리
-                            console.log("Delete chat:", chat.id);
+                          onClick={() => {
+                            handleDeleteSession(chat.id);
                           }}
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />
@@ -145,10 +160,6 @@ export default function ChatHistory({
 const HistorySpinnerBox = () => {
   return (
     <>
-      <Skeleton className="h-[100px] w-[300px] rounded-xl" />
-      <Skeleton className="h-[100px] w-[300px] rounded-xl" />
-      <Skeleton className="h-[100px] w-[300px] rounded-xl" />
-      <Skeleton className="h-[100px] w-[300px] rounded-xl" />
       <Skeleton className="h-[100px] w-[300px] rounded-xl" />
       <Skeleton className="h-[100px] w-[300px] rounded-xl" />
       <Skeleton className="h-[100px] w-[300px] rounded-xl" />

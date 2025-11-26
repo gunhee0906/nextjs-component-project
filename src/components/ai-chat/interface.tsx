@@ -3,17 +3,17 @@
 import { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Bot, Loader2 } from "lucide-react";
-import ChatHeader from "./chat-header";
 import { tableToMarkdown } from "@/utils/chat/tableUtils";
-import ChatInput from "./chat-input";
-import ChatMessage from "./chat-message";
-import { useChatStream } from "@/hooks/useChatStream";
-import { ChatEmpty } from "./chat-empty";
 import {
   useFetchNewAiChatMutation,
   useLazyFetchAiChatContentQuery,
 } from "@/store/api/ai-chat/aiChatSlice";
 import { useParams, useRouter } from "next/navigation";
+import AIChatHeader from "./header";
+import AIChatMessage from "./message";
+import AIChatInput from "./input";
+import { AIChatEmpty } from "./empty";
+import { useAIStream } from "@/hooks/useAiStream";
 
 export default function AiChatInterface({
   children,
@@ -22,8 +22,7 @@ export default function AiChatInterface({
 }) {
   const router = useRouter();
   const params = useParams();
-  const [trigger, { data }] = useLazyFetchAiChatContentQuery();
-  const { messages, setMessages, streamResponse } = useChatStream();
+  const { messages, setMessages, streamResponse } = useAIStream();
   const focusRef = useRef<HTMLTextAreaElement | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -60,9 +59,7 @@ export default function AiChatInterface({
         const result = await setNewSession({ title: currentInput });
         if (result.data.result) {
           currentConversation = result.data?.converstaionId;
-          router.push(
-            `/components-lab/sse-ai-chat/${result.data.converstaionId}`
-          );
+          router.push(`/components-lab/ai-chat/${result.data.converstaionId}`);
         }
       }
       const assistantMessageId = Date.now() + 1;
@@ -110,11 +107,7 @@ export default function AiChatInterface({
       console.error("Failed to copy table:", error);
     }
   };
-
-  const handleClear = () => {
-    setMessages([]);
-    router.replace(`/components-lab/sse-ai-chat`);
-  };
+  const [trigger, { data }] = useLazyFetchAiChatContentQuery();
 
   useEffect(() => {
     if (data?.messages?.length > 0) {
@@ -132,21 +125,21 @@ export default function AiChatInterface({
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)] bg-background">
       {/* 채팅 헤더 영역 */}
-      <ChatHeader onClear={handleClear} />
+      <AIChatHeader />
       <div ref={scrollRef} className="flex-1 overflow-y-auto min-h-0">
         {children}
         <div className="max-w-4xl mx-auto mt-4">
           {messages.length > 0 &&
             messages.map((message) => (
               // 채팅 메세지 영역
-              <ChatMessage
+              <AIChatMessage
                 key={message.id}
                 message={message}
                 copiedTableId={copiedTableId}
                 onCopyTable={handleCopyTable}
               />
             ))}
-          {messages.length === 0 && <ChatEmpty />}
+          {messages.length === 0 && <AIChatEmpty />}
           {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
             <div className="py-8 px-4 bg-muted/50 animate-in fade-in duration-300">
               <div className="max-w-3xl mx-auto flex gap-4">
@@ -163,14 +156,27 @@ export default function AiChatInterface({
             </div>
           )}
         </div>
+        {messages?.length === 0 && (
+          <div className="flex flex-col items-center justify-center">
+            <div className="w-full max-w-3xl px-4">
+              <AIChatInput
+                value={inputValue}
+                onChange={setInputValue}
+                onSend={handleSend}
+                isLoading={isLoading}
+              />
+            </div>
+          </div>
+        )}
       </div>
-      {/* 채팅 입력 영역 */}
-      <ChatInput
-        value={inputValue}
-        onChange={setInputValue}
-        onSend={handleSend}
-        isLoading={isLoading}
-      />
+      {messages?.length > 0 && (
+        <AIChatInput
+          value={inputValue}
+          onChange={setInputValue}
+          onSend={handleSend}
+          isLoading={isLoading}
+        />
+      )}
     </div>
   );
 }
