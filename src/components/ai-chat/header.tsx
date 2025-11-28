@@ -4,7 +4,7 @@ import { ChevronLeft, List } from "lucide-react";
 import Link from "next/link";
 import ChatHistory from "../chat/chat-history";
 
-export default function AIChatHeader() {
+export default function AIChatHeader({ onClear }: { onClear: Function }) {
   return (
     <div className="border-b px-4 py-3 flex items-center gap-2 flex-shrink-0">
       <Link href="/components-lab">
@@ -12,7 +12,7 @@ export default function AIChatHeader() {
       </Link>
       <h1 className="text-xl font-semibold">SSE + Gemini AI Interface</h1>
 
-      <ChatHistory>
+      <ChatHistory onClear={onClear} baseUrl={"ai-chat"}>
         <List className="h-5 w-5" />
       </ChatHistory>
     </div>

@@ -56,7 +56,7 @@ export default function AiChatInterface({
 
       if (!params?.conversation) {
         isNewSessionRef.current = true;
-        const result = await setNewSession({ title: currentInput });
+        const result = await setNewSession({ content: currentInput });
         if (result.data.result) {
           currentConversation = result.data?.converstaionId;
           router.push(`/components-lab/ai-chat/${result.data.converstaionId}`);
@@ -109,6 +109,11 @@ export default function AiChatInterface({
   };
   const [trigger, { data }] = useLazyFetchAiChatContentQuery();
 
+  const handleClear = () => {
+    setMessages([]);
+    router.replace(`/components-lab/ai-chat`);
+  };
+
   useEffect(() => {
     if (data?.messages?.length > 0) {
       setMessages(data?.messages);
@@ -125,7 +130,7 @@ export default function AiChatInterface({
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)] bg-background">
       {/* 채팅 헤더 영역 */}
-      <AIChatHeader />
+      <AIChatHeader onClear={handleClear} />
       <div ref={scrollRef} className="flex-1 overflow-y-auto min-h-0">
         {children}
         <div className="max-w-4xl mx-auto mt-4">

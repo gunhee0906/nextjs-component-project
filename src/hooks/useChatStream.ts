@@ -7,7 +7,6 @@ export const useChatStream = () => {
   const [trigger] = useLazyFetchAiChatHistoryListQuery();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const params = useParams();
-  console.log(params?.conversation);
   const streamResponse = async (
     messageId: number,
     inputValue: string,

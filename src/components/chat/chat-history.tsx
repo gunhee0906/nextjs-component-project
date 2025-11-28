@@ -19,13 +19,16 @@ import {
   useFetchDeleteAiChatMutation,
 } from "@/store/api/ai-chat/aiChatSlice";
 import { useParams, useRouter } from "next/navigation";
+import { ChatDeleteAlert } from "../alert/chatDeleteAlert";
 
 export default function ChatHistory({
   children,
   onClear,
+  baseUrl,
 }: {
   children: React.ReactNode;
   onClear: Function;
+  baseUrl: string;
 }) {
   const router = useRouter();
   const params = useParams();
@@ -109,14 +112,16 @@ export default function ChatHistory({
                       className={`group relative rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors ${chat?.id === params?.conversation ? "bg-muted" : ""}`}
                       onClick={() => {
                         // 채팅 히스토리 클릭 시 처리
-                        router.push(`/components-lab/sse-ai-chat/${chat.id}`);
+                        router.push(`/components-lab/${baseUrl}/${chat.id}`);
                         setOpen(false);
                       }}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-sm truncate mb-1">
-                            {chat.title}
+                            {chat.title?.length > 20
+                              ? chat.title.slice(0, 20) + `...`
+                              : chat.title}
                           </h3>
                           <p className="text-sm text-muted-foreground truncate">
                             {/* {chat.lastMessage} */}

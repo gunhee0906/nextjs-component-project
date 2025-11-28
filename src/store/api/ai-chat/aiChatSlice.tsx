@@ -10,7 +10,7 @@ export const AiChatApiSlice = createApi({
   endpoints: (builder) => ({
     // 채팅 세션 생성
     fetchNewAiChat: builder.mutation({
-      query: (body: { title: string }) => ({
+      query: (body: { content: string }) => ({
         method: "post",
         url: "/new-session",
         body,

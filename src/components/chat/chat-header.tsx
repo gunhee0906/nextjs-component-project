@@ -17,7 +17,7 @@ export default function ChatHeader({ onClear }: Props) {
       <h1 className="text-xl font-semibold">SSE + AI Chat Interface</h1>
       {/* <h1 className="text-xl font-semibold">[새로운 채팅]</h1> */}
 
-      <ChatHistory onClear={onClear}>
+      <ChatHistory onClear={onClear} baseUrl={"sse-ai-chat"}>
         <List className="h-5 w-5" />
       </ChatHistory>
     </div>

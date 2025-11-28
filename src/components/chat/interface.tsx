@@ -57,7 +57,7 @@ export default function AiChatInterface({
 
       if (!params?.conversation) {
         isNewSessionRef.current = true;
-        const result = await setNewSession({ title: currentInput });
+        const result = await setNewSession({ content: currentInput });
         if (result.data.result) {
           currentConversation = result.data?.converstaionId;
           router.push(
