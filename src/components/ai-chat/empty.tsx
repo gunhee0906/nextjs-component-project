@@ -10,8 +10,9 @@ import {
 export function AIChatEmpty() {
   return (
     <Empty>
-      <EmptyHeader>
+      <EmptyHeader className="pt-[9rem]">
         <EmptyTitle className="text-3xl">안녕하세요.</EmptyTitle>
+        <EmptyTitle className="text-3xl">무엇이든 물어보세요.</EmptyTitle>
         <EmptyDescription className="text-xl"></EmptyDescription>
       </EmptyHeader>
       <EmptyContent></EmptyContent>

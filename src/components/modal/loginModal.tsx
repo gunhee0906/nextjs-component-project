@@ -83,6 +83,7 @@ export function LoginModal({ children }: any) {
         setOpen(false);
         trigger();
         toast.success("로그인 되었습니다.");
+        window.location.reload();
       } else {
         setError((prev) => ({ ...prev, login: response.data.message }));
       }

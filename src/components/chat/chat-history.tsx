@@ -110,14 +110,18 @@ export default function ChatHistory({
                     <div
                       key={chat.id}
                       className={`group relative rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors ${chat?.id === params?.conversation ? "bg-muted" : ""}`}
-                      onClick={() => {
-                        // 채팅 히스토리 클릭 시 처리
-                        router.push(`/components-lab/${baseUrl}/${chat.id}`);
-                        setOpen(false);
-                      }}
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
+                        <div
+                          className="flex-1 min-w-0"
+                          onClick={() => {
+                            // 채팅 히스토리 클릭 시 처리
+                            router.push(
+                              `/components-lab/${baseUrl}/${chat.id}`
+                            );
+                            setOpen(false);
+                          }}
+                        >
                           <h3 className="font-semibold text-sm truncate mb-1">
                             {chat.title?.length > 20
                               ? chat.title.slice(0, 20) + `...`
@@ -131,17 +135,18 @@ export default function ChatHistory({
                             {formatDate(chat.created_at)}
                           </div>
                         </div>
-
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={() => {
-                            handleDeleteSession(chat.id);
-                          }}
+                        <ChatDeleteAlert
+                          title={chat.title}
+                          onDelete={() => handleDeleteSession(chat.id)}
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </ChatDeleteAlert>
                       </div>
                     </div>
                   ))}

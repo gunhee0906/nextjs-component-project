@@ -25,7 +25,8 @@ export default function AiChatInterface({
   const { messages, setMessages, streamResponse } = useAIStream();
   const focusRef = useRef<HTMLTextAreaElement | null>(null);
   const [inputValue, setInputValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  // 메세지 전송 시 , loading 상태
+  const [sendLoading, setSendLoading] = useState(false);
   const [copiedTableId, setCopiedTableId] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [setNewSession] = useFetchNewAiChatMutation();
@@ -38,7 +39,7 @@ export default function AiChatInterface({
 
   // 메세지 전송 Event Handler
   const handleSend = async () => {
-    if (inputValue.trim() && !isLoading) {
+    if (inputValue.trim() && !sendLoading) {
       const userMessage: MessageType = {
         id: Date.now(),
         type: "text",
@@ -50,7 +51,7 @@ export default function AiChatInterface({
       setMessages((prev) => [...prev, userMessage]);
       const currentInput = inputValue;
       setInputValue("");
-      setIsLoading(true);
+      setSendLoading(true);
 
       let currentConversation = params?.conversation as string;
 
@@ -80,7 +81,7 @@ export default function AiChatInterface({
         currentConversation
       );
       isNewSessionRef.current = false;
-      setIsLoading(false);
+      setSendLoading(false);
 
       setTimeout(() => {
         focusRef.current?.focus();
@@ -107,7 +108,8 @@ export default function AiChatInterface({
       console.error("Failed to copy table:", error);
     }
   };
-  const [trigger, { data }] = useLazyFetchAiChatContentQuery();
+  const [trigger, { data, isLoading: chatLoading }] =
+    useLazyFetchAiChatContentQuery();
 
   const handleClear = () => {
     setMessages([]);
@@ -145,21 +147,22 @@ export default function AiChatInterface({
               />
             ))}
           {messages.length === 0 && <AIChatEmpty />}
-          {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-            <div className="py-8 px-4 bg-muted/50 animate-in fade-in duration-300">
-              <div className="max-w-3xl mx-auto flex gap-4">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-primary">
-                    <Bot className="h-4 w-4 text-primary-foreground" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 space-y-2">
-                  <p className="font-semibold text-sm">AI</p>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+          {sendLoading &&
+            messages[messages.length - 1]?.role !== "assistant" && (
+              <div className="py-8 px-4 bg-muted/50 animate-in fade-in duration-300">
+                <div className="max-w-3xl mx-auto flex gap-4">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-primary">
+                      <Bot className="h-4 w-4 text-primary-foreground" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-2">
+                    <p className="font-semibold text-sm">AI</p>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
         {messages?.length === 0 && (
           <div className="flex flex-col items-center justify-center">
@@ -168,7 +171,7 @@ export default function AiChatInterface({
                 value={inputValue}
                 onChange={setInputValue}
                 onSend={handleSend}
-                isLoading={isLoading}
+                isLoading={sendLoading}
               />
             </div>
           </div>
@@ -179,7 +182,7 @@ export default function AiChatInterface({
           value={inputValue}
           onChange={setInputValue}
           onSend={handleSend}
-          isLoading={isLoading}
+          isLoading={sendLoading}
         />
       )}
     </div>
