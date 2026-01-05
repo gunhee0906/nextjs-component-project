@@ -1,8 +1,8 @@
 "use client";
 
+import ChatHistory from "@/components/chat/chat-history";
 import { ChevronLeft, List } from "lucide-react";
 import Link from "next/link";
-import ChatHistory from "../chat/chat-history";
 
 export default function AIChatHeader({ onClear }: { onClear: Function }) {
   return (

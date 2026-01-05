@@ -1,0 +1,172 @@
+/* 캘린더 라이브러리 주말 색상 지정 */
+.sunday .fc-daygrid-day-number {
+  color: #df6767 !important;
+}
+.saturday .fc-daygrid-day-number {
+  color: #9a9ad6 !important;
+}
+
+/* // 캘린더 헤더 영역 */
+.fc-header-toolbar {
+  padding: 15px 16px 0px 10px;
+}
+/* // 헤더 툴바 타이틀 */
+.fc-toolbar-title {
+  font-size: 20px;
+  font-weight: 600;
+  padding-right: 5rem;
+}
+/* // 헤더 버튼 */
+.fc .fc-button {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+/* // 헤더 "오늘" 버튼 */
+.fc .fc-today-button {
+  background: #1745aa;
+  color: white;
+}
+
+/* Event 바 */
+.fc-h-event {
+  cursor: pointer;
+}
+
+/* Day Cotent 영역 높이 고정 */
+.fc .fc-daygrid-day-frame {
+  min-height: 215px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.dark .fc .fc-highlight {
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.fc .fc-daygrid-day-events {
+  min-height: auto !important;
+}
+
+.fc .fc-daygrid-event-harness {
+  margin-bottom: 2px;
+}
+
+/* more 링크 스타일 개선 */
+.fc .fc-daygrid-more-link {
+  margin-top: 2px;
+}
+
+.light .fc .fc-daygrid-day-frame:hover {
+  background: #f3f6fd;
+}
+
+.light .fc-event {
+  background: #3788d8;
+  border-radius: 0.5rem;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+}
+
+.light .fc-event:hover {
+  background: #4678aa;
+}
+
+// 드래그 중 커서
+.fc-event {
+  cursor: grab;
+}
+
+.fc-event:active {
+  cursor: grabbing;
+}
+
+/* // (다크모드) 일 경우 , css 변경 */
+.dark .fc {
+  --fc-page-bg-color: hsl(var(--background));
+  --fc-border-color: hsl(var(--border));
+  --fc-neutral-bg-color: hsl(var(--muted));
+  --fc-neutral-text-color: hsl(var(--muted-foreground));
+}
+
+/* (다크모드) Day Cell 칸 스타일 */
+.dark .fc-daygrid-day {
+  background: hsl(var(--background));
+}
+
+.dark .fc-daygrid-day:hover {
+  background: hsl(var(--accent) / 0.08);
+}
+
+.dark .fc-daygrid-day-top {
+  color: hsl(var(--muted-foreground));
+}
+
+/* (다크모드) 오늘 날짜 스타일 */
+.dark .fc-day-today {
+  background: hsl(var(--accent) / 0.12) !important;
+}
+
+.dark .fc-day-today .fc-daygrid-day-number {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+
+.dark .fc .fc-daygrid-day-number {
+  color: white;
+}
+
+.dark .fc .fc-highlight {
+  background: #1c1c1c;
+}
+
+/* (다크모드) Event 스타일 */
+.dark .fc-event {
+  background: hsl(var(--primary) / 0.15);
+  border: 1px solid hsl(var(--primary) / 0.3);
+  color: hsl(var(--primary-foreground));
+  border-radius: 0.5rem;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+}
+
+.dark .fc-event:hover {
+  background: hsl(var(--primary) / 0.25);
+}
+
+/* (다크모드) 툴바 버튼 스타일 */
+.dark .fc-toolbar button {
+  background: hsl(var(--secondary));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--secondary-foreground));
+  border-radius: 0.5rem;
+}
+
+.dark .fc-toolbar button:hover {
+  background: hsl(var(--accent));
+}
+
+.dark .fc-direction-ltr .fc-daygrid-more-link {
+  color: white;
+}
+
+.dark .fc .fc-popover-title {
+  color: white;
+}
+
+/* 오늘 날짜 숫자 */
+.fc-day-today .fc-daygrid-day-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 9999px;
+  background-color: hsl(0 84% 60%); /* shadcn red-500 */
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+}

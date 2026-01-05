@@ -5,7 +5,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import TableMessage from "../chat/item/table";
 import {
   Table,
   TableBody,
@@ -13,8 +12,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "@/components/ui/table";
 import { useRef } from "react";
+import TableMessage from "@/components/chat/item/table";
 
 interface ChatMessageProps {
   message: MessageType;
@@ -121,6 +121,7 @@ export default function AIChatMessage({
                               customStyle={{
                                 margin: 0,
                                 borderRadius: "0.375rem",
+                                lineHeight: 2.5,
                               }}
                             >
                               {codeString}

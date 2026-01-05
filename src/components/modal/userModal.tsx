@@ -9,7 +9,6 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { useFetchLogoutMutation } from "@/store/api/auth/authSlice";
 import { toast } from "sonner";
 import { DialogDescription, DialogTitle } from "../ui/dialog";
@@ -18,15 +17,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 export default function UserModal({ children }: { children: React.ReactNode }) {
   const [useLogout] = useFetchLogoutMutation();
   const [open, setOpen] = useState<boolean>(false);
-  const navigate = useRouter();
   const handleLogout = async () => {
     const response = await useLogout({});
     if (response.data.result) {
-      navigate.push("/");
       setOpen(false);
       toast.success("로그아웃 되었습니다.");
+      // window.location.reload();
+      window.location.href = "/";
     }
   };
+
   return (
     <Drawer open={open} onOpenChange={setOpen} direction="right">
       <DrawerTrigger asChild>{children}</DrawerTrigger>
@@ -41,7 +41,7 @@ export default function UserModal({ children }: { children: React.ReactNode }) {
           </DrawerHeader>
 
           <div className="flex-1 overflow-y-auto">
-            <Avatar className="w-36 h-36 justify-center flex items-center">
+            <Avatar className="w-36 h-36 justify-center flex items-center top-[35px] left-[130px]">
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>

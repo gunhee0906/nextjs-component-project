@@ -1,13 +1,11 @@
 import { useLazyFetchAiChatHistoryListQuery } from "@/store/api/ai-chat/aiChatSlice";
 import { parseMarkdownTable } from "@/utils/chat/tableUtils";
-import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export const useAIStream = () => {
   const [trigger] = useLazyFetchAiChatHistoryListQuery();
   const [messages, setMessages] = useState<MessageType[]>([]);
-  const params = useParams();
-  console.log(params?.conversation);
+  // console.log(params?.conversation);
 
   const streamResponse = async (
     messageId: number,

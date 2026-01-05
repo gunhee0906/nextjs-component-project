@@ -15,14 +15,12 @@ export function DocViewerModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Share</Button>
+        <Button variant="outline">Preview</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Share link</DialogTitle>
-          <DialogDescription>
-            Anyone who has this link will be able to view this.
-          </DialogDescription>
+          <DialogTitle>Preview</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <div style={{ height: 500, overflow: "auto" }}>
           <iframe

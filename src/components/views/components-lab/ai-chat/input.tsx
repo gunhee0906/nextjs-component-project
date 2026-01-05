@@ -1,8 +1,8 @@
 "use client";
 import { CirclePlus, Mic, Send, Square } from "lucide-react";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
-import { useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { useRef, useEffect, useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Props {
   value: string;
@@ -17,7 +17,75 @@ export default function ChatInput({
   onSend,
   isLoading,
 }: Props) {
+  const [voiceMessage, setVoiceMessage] = useState("");
+  const [isListening, setIsListening] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const recognitionRef = useRef<any>(null);
+
+  // Web Speech API 초기화
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition =
+        window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+      if (SpeechRecognition) {
+        recognitionRef.current = new SpeechRecognition();
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = false;
+        recognitionRef.current.lang = "ko-KR";
+
+        recognitionRef.current.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          setVoiceMessage(transcript);
+          // 음성 인식 결과를 onChange로 전달
+          onChange(transcript);
+          setIsListening(false);
+        };
+
+        recognitionRef.current.onerror = (event: any) => {
+          console.error("Speech recognition error:", event.error);
+          setIsListening(false);
+        };
+
+        recognitionRef.current.onend = () => {
+          setIsListening(false);
+        };
+      }
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [onChange]);
+
+  // 음성 메시지가 설정되면 자동으로 전송
+  useEffect(() => {
+    if (voiceMessage && !isListening) {
+      // 약간의 딜레이 후 전송 (사용자가 결과를 확인할 수 있도록)
+      const timer = setTimeout(() => {
+        onSend();
+        setVoiceMessage(""); // 전송 후 초기화
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [voiceMessage, isListening, onSend]);
+
+  const handleVoiceInput = () => {
+    if (recognitionRef.current) {
+      if (isListening) {
+        recognitionRef.current.stop();
+        setIsListening(false);
+      } else {
+        recognitionRef.current.start();
+        setIsListening(true);
+      }
+    } else {
+      alert("이 브라우저는 음성 인식을 지원하지 않습니다.");
+    }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -70,12 +138,20 @@ export default function ChatInput({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                onClick={() => {
-                  /* 음성 입력 기능 */
-                }}
+                className={`h-9 w-9 rounded-full ${
+                  isListening
+                    ? "bg-red-100 dark:bg-red-900"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-700"
+                }`}
+                onClick={handleVoiceInput}
               >
-                <Mic className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                <Mic
+                  className={`h-5 w-5 ${
+                    isListening
+                      ? "text-red-600 dark:text-red-400"
+                      : "text-gray-500 dark:text-gray-400"
+                  }`}
+                />
               </Button>
             ) : (
               <Button
@@ -93,6 +169,9 @@ export default function ChatInput({
             )}
           </div>
         </div>
+        {/* 
+        <div>Voice Message : {voiceMessage}</div> */}
+        {isListening && <div className="text-red-500 mt-2">듣는 중...</div>}
 
         {/* Optional: Character count or helper text */}
       </div>

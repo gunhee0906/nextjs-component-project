@@ -15,7 +15,7 @@ export default function ChatTest() {
   const abortControllerRef = useRef<AbortController | null>(null);
 
   // Express 서버 URL
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+  // const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
   const sendMessage = async () => {
     if (!message.trim() || loading) return;

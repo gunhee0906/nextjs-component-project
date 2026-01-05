@@ -281,7 +281,7 @@ export default function FileUploadPageView() {
                     <div className="text-center">
                       <p className="text-6xl mb-4">📄</p>
                       <p className="text-sm text-muted-foreground">
-                        미리보기를 지원하지 않는 파일 형식입니다
+                        <DocViewerModal />
                       </p>
                     </div>
                   </div>
@@ -431,7 +431,6 @@ export default function FileUploadPageView() {
           </Card>
         </div>
       </div>
-      <DocViewerModal />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import AiChatInterface from "@/components/ai-chat/interface";
+import AiChatInterface from "@/components/views/components-lab/ai-chat/interface";
 
 export default function AIChatLayout({
   children,

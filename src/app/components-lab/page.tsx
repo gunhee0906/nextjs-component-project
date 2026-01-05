@@ -48,6 +48,15 @@ const projects: ProjectItem[] = [
     category: "File & Data Handling",
     tags: ["Drag & Drop", "Upload", "Preview"],
   },
+  {
+    id: "4",
+    title: "Calendar",
+    description: "Full Calendar 라이브러리를 적용한 일정 관리",
+    imageUrl: "/images/file-upload.png",
+    url: "/components-lab/calendar",
+    category: "Calendar",
+    tags: ["calendar"],
+  },
 ];
 
 // 카테고리별로 프로젝트 그룹화
